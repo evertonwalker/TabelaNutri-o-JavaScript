@@ -10,22 +10,108 @@
 		//Capturando os pacientes para calcular seus imcs 
 		var pacientes = document.querySelectorAll(".paciente");
 
- 		//Função responsável por verificar os dados do imc e adicionar marcação a TR responsável pelos erros.
- 		function verificarImc(imc, tag){
+		//executo um loop para cada paciente encontrado, cálculo seu IMC E EXIBO na tela.
+		for(var i = 0; i < pacientes.length; i++){
 
-		 if(imc == "Dados do paciente são inválidos."){
-			tag.classList.add("paciente-invalido");
-			}
+		var pesoValido = validarPeso(pacientes[i].querySelector(".info-peso").textContent);
+		var alturaValida = validarAltura(pacientes[i].querySelector(".info-altura").textContent);
 
- 		}	
+			if(validarPeso && validarAltura){
+				//Setando na coluna IMC, o valor retornado pela função IMC, onde pede a altura e o peso do paciente.
+				pacientes[i].querySelector(".info-imc").textContent = imc(pacientes[i].querySelector(".info-peso").textContent, 
+				pacientes[i].querySelector(".info-altura").textContent);
+			} 
+
+		}
+
+
+
+		//método responsável por verificar o peso dos pacientes
+ 		function validarPeso(peso){
+ 			if(peso > 0 && peso <= 300){
+ 				return true;
+ 			} else {
+ 				return false;
+ 			}
+
+ 		}
+
+ 		//método responsável por verificar o Altura dos pacientes
+ 		function validarAltura(altura){
+ 			if(altura > 0 && altura < 3.00){
+ 				return true;
+ 			} else {
+ 				return false;
+ 			}
+ 		}
+
+ 		function validarPaciente(paciente){
+
+ 			var erros = [];
+
+ 			if(paciente.nome.length == 0 ){
+ 				erros.push("O nome não pode ser vazio");
+ 			}
+
+ 			if(paciente.gordura.length == 0){
+ 				erros.push("A gordura não pode ser vazia");
+ 			}
+
+ 			if(paciente.altura.length == 0){
+ 				erros.push("A altura não pode ser vazia")
+ 			}
+
+ 			if(paciente.peso.length == 0){
+ 				erros.push("O peso não pode ser vazio");
+ 			}
+
+ 			if(!validarAltura(paciente.altura)){
+ 				erros.push("Altura é inválida");
+ 			}
+
+ 			if(!validarPeso(paciente.peso)){
+ 				erros.push("Peso é inválido")
+ 			}
+
+ 			return erros;
+
+ 		}
+
+ 		function addMarcacaoInicialRisco(){
+
+	 		for(var i = 0; i < this.pacientes.length; i++){
+			 	if(pacientes[i].querySelector(".info-imc").textContent >= 25){
+			 		pacientes[i].classList.add("paciente-invalido");
+			 	}
+		 	}
+ 		}
+
+
+		function addMarcacaoRisco(paciente, tr){	
+ 	
+ 			if(paciente.peso > 25){
+			 	tr.classList.add("paciente-invalido");
+ 			}
+		}
+
+ 		function exibirMensagemErros(erros){
+ 			
+ 			var ul = document.querySelector("#mensagens-erro");
+ 			ul.innerHTML = "";
+
+ 			erros.forEach((erro) => {
+
+ 				var li = document.createElement("li");
+ 				li.textContent = erro;
+ 				ul.appendChild(li);
+
+ 			});
+ 			
+ 		}
+
 
  		//Função feita pra retorna o imc.
 		function imc(peso, altura){
-
-			if(peso < 0 || peso > 1000 || altura < 0 || altura > 3.00){
-				return "Dados do paciente são inválidos.";
-			} 
-			
 			//Função toFixed, recebe o número de parâmetros que deveram ser exibidos após a virgula.
 			return (peso/ (altura * altura)).toFixed(2);
 		}
@@ -62,8 +148,6 @@
 			var pacienteTr = document.createElement("tr");
 			pacienteTr.classList.add(".paciente");
 
-		 	verificarImc(paciente.imc, pacienteTr);
-
 		 	//Adicionar Td's ao paciente TD. 
 		 	pacienteTr.appendChild(montarTd(paciente.nome, "info-nome"));
 		    pacienteTr.appendChild(montarTd(paciente.peso, "info-peso"));
@@ -75,8 +159,6 @@
 
 		}
 
-
-
 		function adicionarPaciente(){
 
 			//retirando o comportamento padrão de recarregar a página ao subimeter um formulário.
@@ -84,6 +166,17 @@
 
 		 	//Retornando o paciente montando no formato JSON;
 		 	var paciente = obterPacienteFormulario();
+
+		 	var erros = validarPaciente(paciente);
+
+		 	if(erros.length > 0){
+		 		exibirMensagemErros(erros);
+		 		return;
+		 	}
+
+		 	var ulErros = document.querySelector("#mensagens-erro");
+		 	ulErros.innerHTML = "";
+
 		 	//Retornando uma TR toda preenchida;
 		 	var pacienteTr = montarTr(paciente);
 		 	//Adicionando a TR a Tabela.
@@ -92,27 +185,15 @@
  			//Limpando os dados do formulário:
  			form.reset();
 
-		}
+ 			addMarcacaoRisco(paciente, pacienteTr);
+
+ 		}
 	
+ 		addMarcacaoInicialRisco();
+
 		 //Adicionando um evento ao botão.
 		 button.addEventListener("click", adicionarPaciente);
 	
-		//executo um loop para cada paciente encontrado, cálculo seu IMC E EXIBO na tela.
-		for(var i = 0; i < pacientes.length; i++){
-
-		//Setando na coluna IMC, o valor retornado pela função IMC, onde pede a altura e o peso do paciente.
-		pacientes[i].querySelector(".info-imc").textContent = imc(pacientes[i].querySelector(".info-peso").textContent, 
-		pacientes[i].querySelector(".info-altura").textContent);
-		
-		verificarImc(pacientes[i].querySelector(".info-imc").textContent, pacientes[i]);
-
-		}
-
-
-
-
-
-
 		// ---------------->> O CÓDIGO DAQUI PRA BAIXO É NÍVEL de aprendizado <<----------
 
 		 //O DOM, ou document object Model carrega todo conteúdo da página, caso queira ver é só usar um

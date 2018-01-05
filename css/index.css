@@ -114,6 +114,15 @@ button{
 
 }
 
+#mensagens-erro{
+    color: red;
+}
+
+.fadeOut {
+    opacity: 0;
+    transition: 0.2s;
+}
+
 button:active{
 	margin-top:0px;
 	border: 0;
