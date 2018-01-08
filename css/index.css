@@ -118,9 +118,19 @@ button{
     color: red;
 }
 
+#filtrar-tabela {
+    width: 200px;
+    height: 35px;
+    margin-bottom: 10px;
+}
+
 .fadeOut {
     opacity: 0;
     transition: 0.2s;
+}
+
+.invisivel{
+    display: none;
 }
 
 button:active{

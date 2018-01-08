@@ -18,11 +18,15 @@
 		</header>
 		<main>
 			<section class="container">
+
 				<h2>Meus pacientes</h2>
 
 				<span style="font-size:20px;">Pacientes com marcações vermelhas estão com risco de obesidade.</span>
 
+				<label for="filtrar-tabela">Filtre:</label>
+			    <input type="text" name="filtro" id="filtrar-tabela" placeholder="Digite o nome do paciente">
 				
+
 				<table style="margin-top: 1%;">
 					<thead>
 						<tr>
@@ -74,7 +78,8 @@
 						</tr>
 					</tbody>
 				</table>
-
+					 <span id="erro-ajax" class="invisivel">Erro ao buscar os pacientes</span>
+				    <button id="buscar-pacientes" class="botao bto-principal">Buscar Pacientes</button>
 			</section>
 		</main>
 
@@ -108,6 +113,8 @@
 
 <script type="text/javascript" src="js/principal.js"></script>
 <script type="text/javascript" src="js/remover-paciente.js"></script>
+<script type="text/javascript" src="js/filtra.js" ></script>
+<script type="text/javascript" src="js/busca-pacientes.js"></script>
 
 
 	</body>

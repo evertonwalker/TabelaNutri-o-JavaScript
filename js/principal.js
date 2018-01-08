@@ -1,9 +1,6 @@
  		//Capturando o form;
  		var form = document.querySelector("#form-adiciona");
 
- 		//Capturando a Tabela;
-		 var tabela = document.querySelector("#tabela-pacientes");
-
 		//Capturando o botão do dom que será Clicado.
 		 var button = document.querySelector("#adicionar-paciente");
 
@@ -24,8 +21,6 @@
 
 		}
 
-
-
 		//método responsável por verificar o peso dos pacientes
  		function validarPeso(peso){
  			if(peso > 0 && peso <= 300){
@@ -45,6 +40,7 @@
  			}
  		}
 
+ 		//método responsável por validações do paciente e retorna um array de erro caso encontre algo.
  		function validarPaciente(paciente){
 
  			var erros = [];
@@ -77,6 +73,7 @@
 
  		}
 
+ 		//Função que marca os pacientes com risco de obesidade assim que inicia o sistema
  		function addMarcacaoInicialRisco(){
 
 	 		for(var i = 0; i < this.pacientes.length; i++){
@@ -86,7 +83,7 @@
 		 	}
  		}
 
-
+ 		//Função igual, porém apenas para os novos pacientes que são adicionados.
 		function addMarcacaoRisco(paciente, tr){	
  	
  			if(paciente.peso > 25){
@@ -94,6 +91,7 @@
  			}
 		}
 
+		//Método responsável por capturar os erros e pra cada erro adicionar em uma Li para ser apresentada
  		function exibirMensagemErros(erros){
  			
  			var ul = document.querySelector("#mensagens-erro");
@@ -159,6 +157,22 @@
 
 		}
 
+		//método responsável por receber um paciente, selecionar a tabela
+		//e adiciona-lo a mesma.
+		function adicionarPacienteNaTela(paciente){
+
+			//Capturando a Tabela;
+			var tabela = document.querySelector("#tabela-pacientes");
+			//Retornando uma TR toda preenchida;
+		 	var pacienteTr = montarTr(paciente);
+		 	//Adicionando a TR a Tabela.
+		 	tabela.appendChild(pacienteTr);
+
+		 	return pacienteTr
+
+		}
+
+		//Função que é chamada assim que o botão adicionar paciente é clicado.
 		function adicionarPaciente(){
 
 			//retirando o comportamento padrão de recarregar a página ao subimeter um formulário.
@@ -167,25 +181,27 @@
 		 	//Retornando o paciente montando no formato JSON;
 		 	var paciente = obterPacienteFormulario();
 
+		 	//validações de erros.
 		 	var erros = validarPaciente(paciente);
 
+		 	//caso encontre erro exibe na tela e sai da função.
 		 	if(erros.length > 0){
 		 		exibirMensagemErros(erros);
 		 		return;
-		 	}
+		 	}	
 
+		 	//adiciona paciente a tela
+		 	adicionarPacienteNaTela(paciente);
+
+		 	//limpa os erros
 		 	var ulErros = document.querySelector("#mensagens-erro");
 		 	ulErros.innerHTML = "";
 
-		 	//Retornando uma TR toda preenchida;
-		 	var pacienteTr = montarTr(paciente);
-		 	//Adicionando a TR a Tabela.
-		 	tabela.appendChild(pacienteTr);
- 		
  			//Limpando os dados do formulário:
  			form.reset();
 
- 			addMarcacaoRisco(paciente, pacienteTr);
+ 			//adiciona marcação caso o novo paciente esteja àcima do peso.
+ 			addMarcacaoRisco(paciente, adicionarPacienteNaTela(paciente));
 
  		}
 	
